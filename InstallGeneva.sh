@@ -1,20 +1,7 @@
 #!/bin/bash
 log="/var/log/InstallGeneva.log"
-while getopts u:a:p:f:c:b:t:e:s: option
-do
- case "${option}"
- in
- u) USER_NAME=${OPTARG};;
- a) REGISTRY_APPID=${OPTARG};;
- p) REGISTRY_PASSWORD=${OPTARG};;
- f) CERTIFICATE_FILENAME=${OPTARG};;
- c) CERTIFICATE_PASSWORD=${OPTARG};;
- b) BLOB_CONTAINER_URL=${OPTARG};;
- t) BLOB_CONTAINER_SAS=${OPTARG};;
- e) ENVIRONMENT=${OPTARG};;
- s) STAMP_LABEL=${OPTARG};;
- esac
-done
+BLOB_CONTAINER_URL=$1
+BLOB_CONTAINER_SAS=$2
 
 ###################
 echo "==== Bootstrapping ... ====" |& sudo tee $log
