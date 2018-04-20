@@ -43,7 +43,7 @@ sudo docker run -d \
 
 echo "Download mdmstat config"
 mkdir /home/sshuser/MA/geneva_mdmstatsd
-curl -o /home/sshuser/MA/geneva_mdmstatsd/mdmdstatsd.conf $BLOB_CONTAINER_URL/GenevaLinux/mdmdstatsd.conf$BLOB_CONTAINER_SAS
+curl -o /home/sshuser/MA/geneva_mdmstatsd/mdmstatsd.conf $BLOB_CONTAINER_URL/GenevaLinux/mdmstatsd.conf$BLOB_CONTAINER_SAS
 echo "Run docker"
 sudo docker run -d \
     -v /home/sshuser/MA/geneva_mdmstatsd:/tmp/geneva_mdmstatsd \
