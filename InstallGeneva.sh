@@ -31,12 +31,12 @@ sudo docker rm -f fluentddi
 
 echo "Run docker"
 sudo docker run -d \
-    -v /home/sshuser/MA/geneva_mdm:/tmp/geneva_mdm \
+    -v /home/sshuser/mdm/geneva_mdm:/tmp/geneva_mdm \
     -v /var/etw \
     --net=host \
     --uts=host \
-    -e MDM_ACCOUNT="o365ipditest" \
-    -e METRIC_ENDPOINT="https://az-int.metrics.nsatc.net/" \
+    -e MDM_ACCOUNT="IPCore" \
+    -e METRIC_ENDPOINT="https://global.metrics.nsatc.net/" \
     -e MDM_LOG_LEVEL="Warning" \
     --name=mdmdi \
     linuxgeneva-microsoft.azurecr.io/genevamdm:master_548
@@ -46,7 +46,7 @@ mkdir /home/sshuser/MA/geneva_mdmstatsd
 curl -o /home/sshuser/MA/geneva_mdmstatsd/mdmstatsd.conf $BLOB_CONTAINER_URL/GenevaLinux/mdmstatsd.conf$BLOB_CONTAINER_SAS
 echo "Run docker"
 sudo docker run -d \
-    -v /home/sshuser/MA/geneva_mdmstatsd:/tmp/geneva_mdmstatsd \
+    -v /home/sshuser/mdm/geneva_mdmstatsd:/tmp/geneva_mdmstatsd \
     --volumes-from mdmdi \
     --net=host \
     --uts=host \
@@ -59,20 +59,21 @@ mkdir /home/sshuser/MA/geneva_mdsd
 curl -o /home/sshuser/MA/geneva_mdsd/gcscert.pem $BLOB_CONTAINER_URL/GenevaLinux/gcscert.pem$BLOB_CONTAINER_SAS
 curl -o /home/sshuser/MA/geneva_mdsd/gcskey.pem $BLOB_CONTAINER_URL/GenevaLinux/gcskey.pem$BLOB_CONTAINER_SAS
 curl -o /home/sshuser/MA/geneva_mdsd/mdsd.xml $BLOB_CONTAINER_URL/GenevaLinux/mdsd.xml$BLOB_CONTAINER_SAS
-docker run -d \
-    -v /home/sshuser/MA/geneva_mdsd:/tmp/geneva_mdsd \
-    -v /home/sshuser/MA/mdsd_run:/var/run/mdsd \
+sudo docker run -d \
+    -v /home/sshuser/mdsd/geneva_mdsd:/tmp/geneva_mdsd \
+    -v /home/sshuser/mdsd/mdsd_run:/var/run/mdsd \
+    -v /home/sshuser/mdsd/log:/var/log \
     --net=host \
     --uts=host \
-    -e TENANT="o365ipdiazure" \
-    -e ROLE="hdinsights" \
-    -e ROLEINSTANCE="machinename" \
+    -e TENANT="O365IpDiTenant" \
+    -e ROLE="O365IpDiRole" \
+    -e ROLEINSTANCE="O365IpDiInstance" \
     -e MDSD_PORT=0 \
-    -e MONITORING_GCS_ENVIRONMENT="Test" \
-    -e MONITORING_GCS_ACCOUNT="o365ipditest" \
-    -e MONITORING_GCS_NAMESPACE="o365ipditest" \
+    -e MONITORING_GCS_ENVIRONMENT="DiagnosticsProd" \
+    -e MONITORING_GCS_ACCOUNT="O365IpCore" \
+    -e MONITORING_GCS_NAMESPACE="IpDataInsightsMdsd" \
     -e MONITORING_GCS_REGION="westus" \
-    -e MONITORING_GCS_THUMBPRINT=15FE79F7D2E20689E7D8DCD2A680108A6804106E  \
+    -e MONITORING_GCS_THUMBPRINT=D22080E526AB8D9FE11B534EBE204DE146C5687D \
     -e MDSD_OPTIONS="-c /tmp/geneva_mdsd/mdsd.xml" \
     --name=mdsddi \
     linuxgeneva-microsoft.azurecr.io/genevamdsd:master_912
@@ -81,10 +82,10 @@ docker run -d \
 echo "Download fluentd"
 mkdir /home/sshuser/MA/fluentd
 curl -o /home/sshuser/MA/fluentd/fluentd.conf  $BLOB_CONTAINER_URL/GenevaLinux/fluentd.conf$BLOB_CONTAINER_SAS
-docker run -d \
+sudo docker run -d \
     -p 24224:24224 \
-    -v /home/sshuser/MA/fluentd:/etc/fluentd \
-    -v /home/sshuser/MA/mdsd_run:/var/run/mdsd \
+    -v /home/sshuser/mdsd/fluentd:/etc/fluentd \
+    -v /home/sshuser/mdsd/mdsd_run:/var/run/mdsd \
     -e FLUENTD_CONF=/etc/fluentd/fluentd.conf \
     --name=fluentddi \
     linuxgeneva-microsoft.azurecr.io/genevafluentd_td-agent:master_78
