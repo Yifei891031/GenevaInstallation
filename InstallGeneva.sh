@@ -31,7 +31,7 @@ sudo docker rm -f fluentddi
 
 echo "Run docker"
 sudo docker run -d \
-    -v /home/sshuser/mdm/geneva_mdm:/tmp/geneva_mdm \
+    -v /home/sshuser/MA/geneva_mdm:/tmp/geneva_mdm \
     -v /var/etw \
     --net=host \
     --uts=host \
@@ -46,7 +46,7 @@ mkdir /home/sshuser/MA/geneva_mdmstatsd
 curl -o /home/sshuser/MA/geneva_mdmstatsd/mdmstatsd.conf $BLOB_CONTAINER_URL/GenevaLinux/mdmstatsd.conf$BLOB_CONTAINER_SAS
 echo "Run docker"
 sudo docker run -d \
-    -v /home/sshuser/mdm/geneva_mdmstatsd:/tmp/geneva_mdmstatsd \
+    -v /home/sshuser/MA/geneva_mdmstatsd:/tmp/geneva_mdmstatsd \
     --volumes-from mdmdi \
     --net=host \
     --uts=host \
@@ -60,9 +60,9 @@ curl -o /home/sshuser/MA/geneva_mdsd/gcscert.pem $BLOB_CONTAINER_URL/GenevaLinux
 curl -o /home/sshuser/MA/geneva_mdsd/gcskey.pem $BLOB_CONTAINER_URL/GenevaLinux/gcskey.pem$BLOB_CONTAINER_SAS
 curl -o /home/sshuser/MA/geneva_mdsd/mdsd.xml $BLOB_CONTAINER_URL/GenevaLinux/mdsd.xml$BLOB_CONTAINER_SAS
 sudo docker run -d \
-    -v /home/sshuser/mdsd/geneva_mdsd:/tmp/geneva_mdsd \
-    -v /home/sshuser/mdsd/mdsd_run:/var/run/mdsd \
-    -v /home/sshuser/mdsd/log:/var/log \
+    -v /home/sshuser/MA/geneva_mdsd:/tmp/geneva_mdsd \
+    -v /home/sshuser/MA/mdsd_run:/var/run/mdsd \
+    -v /home/sshuser/MA/log:/var/log \
     --net=host \
     --uts=host \
     -e TENANT="O365IpDiTenant" \
@@ -84,8 +84,8 @@ mkdir /home/sshuser/MA/fluentd
 curl -o /home/sshuser/MA/fluentd/fluentd.conf  $BLOB_CONTAINER_URL/GenevaLinux/fluentd.conf$BLOB_CONTAINER_SAS
 sudo docker run -d \
     -p 24224:24224 \
-    -v /home/sshuser/mdsd/fluentd:/etc/fluentd \
-    -v /home/sshuser/mdsd/mdsd_run:/var/run/mdsd \
+    -v /home/sshuser/MA/fluentd:/etc/fluentd \
+    -v /home/sshuser/MA/mdsd_run:/var/run/mdsd \
     -e FLUENTD_CONF=/etc/fluentd/fluentd.conf \
     --name=fluentddi \
     linuxgeneva-microsoft.azurecr.io/genevafluentd_td-agent:master_78
