@@ -35,7 +35,7 @@ sudo docker run -d \
     -v /var/etw \
     --net=host \
     --uts=host \
-    -e MDM_ACCOUNT="IPCore" \
+    -e MDM_ACCOUNT="O365IpCore" \
     -e METRIC_ENDPOINT="https://global.metrics.nsatc.net/" \
     -e MDM_LOG_LEVEL="Warning" \
     --name=mdmdi \
